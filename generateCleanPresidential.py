@@ -3,8 +3,7 @@ import numpy as np
 from string import Template
 
 '''
-Code to generate county lists
-
+Code to generate clean presidential data from raw presidential data
 '''
 
 abbrevMap = {}
@@ -37,5 +36,5 @@ for y in range:
     data['State'] = data['State'].map(abbrevMap)
     # Remove non-data entry rows
     data = data.dropna(thresh=1)
-    data = data.sort_values('State',axis=0)
+    data = data.sort_values(['State', 'County'],axis=0)
     data.to_csv(out_path)
