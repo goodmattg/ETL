@@ -1,6 +1,6 @@
 DATA CHECKSUM VALID
 
-All data sets contain 3138 datapoints
+All data sets contain 3111 datapoints
 
 Presidential data processed for years:
 1984

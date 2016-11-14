@@ -7,17 +7,17 @@ Code to generate MATLAB ready presidential data from clean presidential data.
 
 1) Remove counties that are not consistent with the base set of counties
 '''
-base_dir = 'PresidentialReturns_CLEAN/Election_Returns_'
-out_dir = 'PresidentialReturns_TR/Election_Returns_'
-checksum_dir = 'PresidentialReturns_TR/'
+base_dir = 'CLEAN/Election_Returns_'
+out_dir = 'TR/Election_Returns_'
+checksum_dir = 'TR/'
 file_prefix = 'returns_'
 template = Template('$dir$year/$fname$year.csv')
 range = [1984, 1988, 1992, 1996, 2000, 2004, 2008, 2012]
 
-rc = pd.read_csv('CountyLists/diffSet.csv')
+rc = pd.read_csv('../CountyLists/diffSet.csv')
 rc = dict(zip(list(rc.County), list(rc.State)))
 
-checkSet = pd.read_csv('CountyLists/baseSet.csv')
+checkSet = pd.read_csv('../CountyLists/baseSet.csv')
 
 f_checksum = open(checksum_dir+'checksum.txt', 'w')
 

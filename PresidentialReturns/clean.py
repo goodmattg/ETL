@@ -15,13 +15,13 @@ def dictTransform(rowVal, dict):
     return dict[rowVal]
 
 # build the abbreviation transform map
-abbrevs = pd.read_csv('Mappings/stateAbbrevToExpanded.csv')
+abbrevs = pd.read_csv('../Mappings/stateAbbrevToExpanded.csv')
 for index, row in abbrevs.iterrows():
     abbrevMap[row['Abbrev']] = row['State']
 
 
-base_dir = 'PresidentialReturns_RAW/Election_Returns_'
-out_dir = 'PresidentialReturns_CLEAN/Election_Returns_'
+base_dir = 'RAW/Election_Returns_'
+out_dir = 'CLEAN/Election_Returns_'
 file_prefix = 'returns_'
 template = Template('$dir$year/$fname$year.csv')
 range = [1984, 1988, 1992, 1996, 2000, 2004, 2008, 2012]

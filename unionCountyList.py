@@ -14,7 +14,7 @@ def intersect(a,b):
 def union(a,b):
     return a.union(b)
 
-fdir = 'PresidentialReturns_CLEAN/Election_Returns_'
+fdir = 'PresidentialReturns/CLEAN/Election_Returns_'
 fprefix = 'returns_'
 template = Template('$dir$year/$fname$year.csv')
 range = [1984, 1988, 1992, 1996, 2000, 2004, 2008, 2012]
@@ -34,6 +34,11 @@ for idx, y in enumerate(range):
 unionSet = reduce(union, countySet)
 baseSet = reduce(intersect, countySet)
 diffSet = unionSet.difference(baseSet)
+
+# Section to remove Alaska from the base set
+alaskaSet = {el for el in baseSet if el[0] == 'Alaska'}
+baseSet = baseSet - alaskaSet
+diffSet = diffSet | alaskaSet
 
 baseSet = list(baseSet)
 diffSet = list(diffSet)
