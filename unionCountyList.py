@@ -5,7 +5,8 @@ from functools import reduce
 
 '''
 Produces a CSV file containing the set of STATE/County
-pairs unique across the entire data set
+pairs unique across the entire data set based on presidential
+election data.
 '''
 
 def intersect(a,b):
@@ -27,7 +28,7 @@ for idx, y in enumerate(range):
     data = pd.read_csv(abs_path)
 
     for index, row in data.iterrows():
-        tmpSet.add((row['State'], row['County']))
+        tmpSet.add((row['State'].strip(), row['County'].strip()))
 
     countySet[idx] = tmpSet
 
