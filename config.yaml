@@ -1,0 +1,68 @@
+---
+dataFileType: ".csv"
+dirHeaders:
+    raw_dir: "RAW/"
+    cleaned_dir: "CLEAN/"
+    transformed_dir: "TR/"
+datasets:
+    - Population:
+        tagline: "raw population data"
+        directory: "Population/"
+        year_start: 1960
+        year_end: 2010
+        year_increment: 10
+        years_absent: []
+        single_file: true
+        loc_single_column: true
+        file_base: "populationRaw"
+    - Percentage_Female :
+        tagline: "gender"
+        directory: "Gender/"
+        year_start: 2000
+        year_end: 2009
+        year_increment: 1
+        years_absent: []
+        single_file: true
+        loc_single_column: true
+        file_base: "genderRaw"
+    - Percentage_White :
+        tagline: "race"
+        directory: "Race/"
+        year_start: 1960
+        year_end: 2010
+        year_increment: 10
+        years_absent: []
+        single_file: true
+        loc_single_column: true
+        file_base: "raceRaw"
+    - Population_Density:
+        tagline: "population density"
+        directory: "PopulationDensity/"
+        year_start: 1980
+        year_end: 2010
+        year_increment: 10
+        years_absent: []
+        single_file: true
+        loc_single_column: true
+        file_base: "populationDensityRaw"
+    - Election_Presidential:
+    - Election_Senatorial:
+    - Median_Income:
+        tagline: "median income"
+        directory: "MedianIncome/"
+        year_start: 2003
+        year_end: 2014
+        year_increment: 1
+        years_absent: []
+        single_file: false
+        loc_single_column: false
+        file_base: "medianIncome_"
+    - Federal_Spending:
+
+
+...
+
+# Only specification is we need to know if state/county is
+# single column or two columns. If single, split with one method.
+# If two columns, they must be labeled "State" and "County"
+# respectivally. If single column. Column must be named "Location."
