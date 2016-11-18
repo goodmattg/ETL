@@ -2,6 +2,7 @@ import helpers as hp
 from string import Template
 import pandas as pd
 import numpy as np
+import pdb
 
 '''
 Master file to generate "clean" data from datasets defined in
@@ -65,10 +66,10 @@ for s in config['datasets']:
 
                     if (len(tmp) > 1):
                         row['State'] = tmp[1].upper().strip()
-                        row['County'] = tmp[0].upper().strip()
+                        row['County'] = tmp[0].upper().replace("COUNTY","").strip()
                     else:
                         # matches either STATE, UNITED STATES, District of Columbia
-                        row['County'] = tmp[0].upper().strip()
+                        row['County'] = tmp[0].upper().replace("COUNTY","").strip()
                         row['State'] = "z_NA"
                     rawData.loc[idx] = row
 
@@ -79,7 +80,7 @@ for s in config['datasets']:
 
                 for idx, row in rawData.iterrows():
                     row['State'] = row['State'].upper().strip()
-                    row['County'] = row['County'].upper().strip()
+                    row['County'] = row['County'].upper().replace("COUNTY","").strip()
                     rawData.loc[idx] = row
 
             rawData['State'] = rawData['State'].map(abbrevMap, na_action='ignore')
@@ -123,10 +124,10 @@ for s in config['datasets']:
 
                         if (len(tmp) > 1):
                             row['State'] = tmp[1].upper().strip()
-                            row['County'] = tmp[0].upper().strip()
+                            row['County'] = tmp[0].upper().replace("COUNTY","").strip()
                         else:
                             # matches either STATE, UNITED STATES, District of Columbia
-                            row['County'] = tmp[0].upper().strip()
+                            row['County'] = tmp[0].upper().replace("COUNTY","").strip()
                             row['State'] = "z_NA"
                         rawData.loc[idx] = row
 
@@ -137,7 +138,7 @@ for s in config['datasets']:
                     # data is already stored in "State" and "County"
                     for idx, row in rawData.iterrows():
                         row['State'] = row['State'].upper().strip()
-                        row['County'] = row['County'].upper().strip()
+                        row['County'] = row['County'].upper().replace("COUNTY","").strip()
                         rawData.loc[idx] = row
 
                 rawData['State'] = rawData['State'].map(abbrevMap, na_action='ignore')
