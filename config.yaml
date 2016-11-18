@@ -5,7 +5,8 @@ dirHeaders:
     cleaned_dir: "CLEAN/"
     transformed_dir: "TR/"
 datasets:
-    - Population:
+    - set:
+        name: "Population"
         tagline: "raw population data"
         directory: "Population/"
         year_start: 1960
@@ -15,7 +16,8 @@ datasets:
         single_file: true
         loc_single_column: true
         file_base: "populationRaw"
-    - Percentage_Female :
+    - set:
+        name: "Percentage_Female"
         tagline: "gender"
         directory: "Gender/"
         year_start: 2000
@@ -25,7 +27,8 @@ datasets:
         single_file: true
         loc_single_column: true
         file_base: "genderRaw"
-    - Percentage_White :
+    - set:
+        name: "Percentage_White"
         tagline: "race"
         directory: "Race/"
         year_start: 1960
@@ -35,7 +38,8 @@ datasets:
         single_file: true
         loc_single_column: true
         file_base: "raceRaw"
-    - Population_Density:
+    - set:
+        name: "Population_Density"
         tagline: "population density"
         directory: "PopulationDensity/"
         year_start: 1980
@@ -45,9 +49,30 @@ datasets:
         single_file: true
         loc_single_column: true
         file_base: "populationDensityRaw"
-    - Election_Presidential:
-    - Election_Senatorial:
-    - Median_Income:
+    - set:
+        name: "Election_Presidential"
+        tagline: "presidential election returns"
+        directory: "PresidentialReturns/"
+        year_start: 1984
+        year_end: 2012
+        year_increment: 4
+        years_absent: []
+        single_file: false
+        loc_single_column: false
+        file_base: "presidentialReturns_"
+    - set:
+        name: "Age_Plus_SixtyFive"
+        tagline: "percentage of population older than 65"
+        directory: "Age/"
+        year_start: 2000
+        year_end: 2009
+        year_increment: 1
+        years_absent: []
+        single_file: true
+        loc_single_column: true
+        file_base: "agePlus65Raw.csv"
+    - set:
+        name: "Median_Income"
         tagline: "median income"
         directory: "MedianIncome/"
         year_start: 2003
@@ -57,7 +82,17 @@ datasets:
         single_file: false
         loc_single_column: false
         file_base: "medianIncome_"
-    - Federal_Spending:
+    - set:
+        name: "Federal_Spending"
+        tagline: "federal spending at the county level"
+        directory: "FederalSpending/"
+        year_start: 1983
+        year_end: 2010
+        year_increment: 1
+        years_absent: []
+        single_file: true
+        loc_single_column: true
+        file_base: "rawFederalSpending.csv"
 
 
 ...
