@@ -70,7 +70,7 @@ datasets:
         years_absent: []
         single_file: true
         loc_single_column: true
-        file_base: "agePlus65Raw.csv"
+        file_base: "agePlus65Raw"
     - set:
         name: "Median_Income"
         tagline: "median income"
@@ -92,9 +92,7 @@ datasets:
         years_absent: []
         single_file: true
         loc_single_column: true
-        file_base: "rawFederalSpending.csv"
-
-
+        file_base: "rawFederalSpending"
 ...
 
 # Only specification is we need to know if state/county is
