@@ -123,6 +123,7 @@ for s in config['datasets']:
                 f_checksum.write("{:d} Counties\n\n".format(rawData.shape[0]))
 
         f_checksum.write("Finished transforming dataset: {:s}\n\n".format(ds['name']))
+        f_checksum.write("---------------------------------------------------\n")
 
     except:
 

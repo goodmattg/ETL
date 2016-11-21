@@ -2,56 +2,54 @@
 
 Finished transforming dataset: Population
 
+---------------------------------------------------
 3113 Counties
 
 Finished transforming dataset: Percentage_Female
 
+---------------------------------------------------
 3113 Counties
 
 Finished transforming dataset: Percentage_White
 
+---------------------------------------------------
 3113 Counties
 
 Finished transforming dataset: Population_Density
 
-DISTRICT OF COLUMBIA | z_NA
+---------------------------------------------------
 Year: 1984 transformed
-3112 Counties
+3113 Counties
 
-DISTRICT OF COLUMBIA | z_NA
 Year: 1988 transformed
-3112 Counties
+3113 Counties
 
-DISTRICT OF COLUMBIA | z_NA
 Year: 1992 transformed
-3112 Counties
+3113 Counties
 
-DISTRICT OF COLUMBIA | z_NA
 Year: 1996 transformed
-3112 Counties
+3113 Counties
 
-DISTRICT OF COLUMBIA | z_NA
 Year: 2000 transformed
-3112 Counties
+3113 Counties
 
-DISTRICT OF COLUMBIA | z_NA
 Year: 2004 transformed
-3112 Counties
+3113 Counties
 
-DISTRICT OF COLUMBIA | z_NA
 Year: 2008 transformed
-3112 Counties
+3113 Counties
 
-DISTRICT OF COLUMBIA | z_NA
 Year: 2012 transformed
-3112 Counties
+3113 Counties
 
 Finished transforming dataset: Election_Presidential
 
+---------------------------------------------------
 3113 Counties
 
 Finished transforming dataset: Age_Plus_SixtyFive
 
+---------------------------------------------------
 Year: 2003 transformed
 3113 Counties
 
@@ -87,8 +85,10 @@ Year: 2013 transformed
 
 Finished transforming dataset: Median_Income
 
+---------------------------------------------------
 3113 Counties
 
 Finished transforming dataset: Federal_Spending
 
-Timestamp: 2016-Nov-20 23:47:41
+---------------------------------------------------
+Timestamp: 2016-Nov-21 14:55:22
