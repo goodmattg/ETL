@@ -16,6 +16,7 @@ datasets:
         single_file: true
         loc_single_column: true
         file_base: "populationRaw"
+        fips_flag: false
     - set:
         name: "Percentage_Female"
         tagline: "gender"
@@ -27,6 +28,8 @@ datasets:
         single_file: true
         loc_single_column: true
         file_base: "genderRaw"
+        fips_flag: false
+
     - set:
         name: "Percentage_White"
         tagline: "race"
@@ -38,6 +41,8 @@ datasets:
         single_file: true
         loc_single_column: true
         file_base: "raceRaw"
+        fips_flag: false
+
     - set:
         name: "Population_Density"
         tagline: "population density"
@@ -49,6 +54,7 @@ datasets:
         single_file: true
         loc_single_column: true
         file_base: "populationDensityRaw"
+        fips_flag: false
     - set:
         name: "Election_Presidential"
         tagline: "presidential election returns"
@@ -60,6 +66,7 @@ datasets:
         single_file: false
         loc_single_column: false
         file_base: "presidentialReturns_"
+        fips_flag: false
     - set:
         name: "Age_Plus_SixtyFive"
         tagline: "percentage of population older than 65"
@@ -71,17 +78,19 @@ datasets:
         single_file: true
         loc_single_column: true
         file_base: "agePlus65Raw"
+        fips_flag: false
     - set:
         name: "Median_Income"
         tagline: "median income"
         directory: "MedianIncome/"
         year_start: 2003
-        year_end: 2014
+        year_end: 2013
         year_increment: 1
         years_absent: []
         single_file: false
         loc_single_column: false
         file_base: "medianIncome_"
+        fips_flag: true
     - set:
         name: "Federal_Spending"
         tagline: "federal spending at the county level"
@@ -93,6 +102,7 @@ datasets:
         single_file: true
         loc_single_column: true
         file_base: "rawFederalSpending"
+        fips_flag: false
 ...
 
 # Only specification is we need to know if state/county is

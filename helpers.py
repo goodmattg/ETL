@@ -12,7 +12,6 @@ def getDictionarySet():
     return retDict
 
 
-
 '''
 Returns the parsed config file "config.yaml" as a dictionary
 '''
@@ -34,8 +33,11 @@ def getAbbreviationMap():
     return abbrevMap
 
 
+
 def yearList(start, end, incr, absentYears):
     yr = range(start, end+incr, incr)
     for rem in absentYears:
         yr.remove(rem)
     return yr
+
+

@@ -65,10 +65,10 @@ for s in config['datasets']:
 
                     if (len(tmp) > 1):
                         row['State'] = tmp[1].upper().strip()
-                        row['County'] = tmp[0].upper().replace("COUNTY","").strip()
+                        row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").strip()
                     else:
                         # matches either STATE, UNITED STATES, District of Columbia
-                        row['County'] = tmp[0].upper().replace("COUNTY","").strip()
+                        row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").strip()
                         row['State'] = "z_NA"
                     rawData.loc[idx] = row
 
@@ -78,8 +78,11 @@ for s in config['datasets']:
                 rawData = rawData.dropna(thresh=2, subset=['County', 'State'])
 
                 for idx, row in rawData.iterrows():
-                    row['State'] = row['State'].upper().strip()
-                    row['County'] = row['County'].upper().replace("COUNTY","").strip()
+                    if (ds['fips_flag'] & row['FIPS']==0):
+                        row['State'] = 'z_NA'
+                    else:
+                        row['State'] = row['State'].upper().strip()
+                    row['County'] = row['County'].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").strip()
                     rawData.loc[idx] = row
 
             rawData['State'] = rawData['State'].map(abbrevMap, na_action='ignore')
@@ -123,10 +126,10 @@ for s in config['datasets']:
 
                         if (len(tmp) > 1):
                             row['State'] = tmp[1].upper().strip()
-                            row['County'] = tmp[0].upper().replace("COUNTY","").strip()
+                            row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").strip()
                         else:
                             # matches either STATE, UNITED STATES, District of Columbia
-                            row['County'] = tmp[0].upper().replace("COUNTY","").strip()
+                            row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").strip()
                             row['State'] = "z_NA"
                         rawData.loc[idx] = row
 
@@ -136,8 +139,11 @@ for s in config['datasets']:
 
                     # data is already stored in "State" and "County"
                     for idx, row in rawData.iterrows():
-                        row['State'] = row['State'].upper().strip()
-                        row['County'] = row['County'].upper().replace("COUNTY","").strip()
+                        if (ds['fips_flag'] and row['FIPS'] == 0):
+                            row['State'] = 'z_NA'
+                        else:
+                            row['State'] = row['State'].upper().strip()
+                        row['County'] = row['County'].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").strip()
                         rawData.loc[idx] = row
 
                 rawData['State'] = rawData['State'].map(abbrevMap, na_action='ignore')

@@ -9,7 +9,7 @@ def union(a,b):
 def intersect(a,b):
     return a.intersection(b)
 
-fdir = 'MedianIncome/CLEAN/'
+fdir = 'Medincome/CLEAN/'
 fprefix = 'medianIncome_'
 template = Template('$dir$name$year.csv')
 y_start = 2003
