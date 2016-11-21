@@ -2,6 +2,8 @@ import helpers as hp
 from string import Template
 import pandas as pd
 import numpy as np
+import datetime
+
 
 config = hp.getConfigData()
 
@@ -123,6 +125,8 @@ for s in config['datasets']:
         f_checksum.write("Finished transforming dataset: {:s}\n\n".format(ds['name']))
 
     except:
+
         f_checksum.write("ERROR transforming dataset: {:s}\n".format(ds['name']))
 
+f_checksum.write('Timestamp: {:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now()))
 f_checksum.close()

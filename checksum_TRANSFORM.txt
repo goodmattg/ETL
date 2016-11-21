@@ -2,19 +2,19 @@
 
 Finished transforming dataset: Population
 
-3113 Counties
+Timestamp: 2016-Nov-20 22:17:153113 Counties
 
 Finished transforming dataset: Percentage_Female
 
-3113 Counties
+Timestamp: 2016-Nov-20 22:17:193113 Counties
 
 Finished transforming dataset: Percentage_White
 
-3113 Counties
+Timestamp: 2016-Nov-20 22:17:233113 Counties
 
 Finished transforming dataset: Population_Density
 
-DISTRICT OF COLUMBIA | z_NA
+Timestamp: 2016-Nov-20 22:17:27DISTRICT OF COLUMBIA | z_NA
 ALASKA | z_NA
 Year: 1984 transformed
 3111 Counties
@@ -56,11 +56,11 @@ Year: 2012 transformed
 
 Finished transforming dataset: Election_Presidential
 
-3113 Counties
+Timestamp: 2016-Nov-20 22:18:003113 Counties
 
 Finished transforming dataset: Age_Plus_SixtyFive
 
-Year: 2003 transformed
+Timestamp: 2016-Nov-20 22:18:05Year: 2003 transformed
 3113 Counties
 
 Year: 2004 transformed
@@ -95,7 +95,8 @@ Year: 2013 transformed
 
 Finished transforming dataset: Median_Income
 
-3113 Counties
+Timestamp: 2016-Nov-20 22:18:513113 Counties
 
 Finished transforming dataset: Federal_Spending
 
+Timestamp: 2016-Nov-20 22:18:55
