@@ -1,5 +1,0 @@
-DATA CHECKSUM VALID
-
-All data sets contain 3111 datapoints
-
-Gender data processed
