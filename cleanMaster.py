@@ -141,6 +141,8 @@ for s in config['datasets']:
                     for idx, row in rawData.iterrows():
                         if (ds['fips_flag'] and row['FIPS'] == 0):
                             row['State'] = 'z_NA'
+                        elif (row['State'] == 'z_NA'):
+                            continue
                         else:
                             row['State'] = row['State'].upper().strip()
                         row['County'] = row['County'].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").strip()
@@ -156,5 +158,6 @@ for s in config['datasets']:
     except:
         f_checksum.write("ERROR cleaning dataset: {:s}\n".format(ds['name']))
 
+f_checksum.write('Timestamp: {:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now()))
 f_checksum.close()
 

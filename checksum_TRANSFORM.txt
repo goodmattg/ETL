@@ -2,65 +2,57 @@
 
 Finished transforming dataset: Population
 
-Timestamp: 2016-Nov-20 22:17:153113 Counties
+3113 Counties
 
 Finished transforming dataset: Percentage_Female
 
-Timestamp: 2016-Nov-20 22:17:193113 Counties
+3113 Counties
 
 Finished transforming dataset: Percentage_White
 
-Timestamp: 2016-Nov-20 22:17:233113 Counties
+3113 Counties
 
 Finished transforming dataset: Population_Density
 
-Timestamp: 2016-Nov-20 22:17:27DISTRICT OF COLUMBIA | z_NA
-ALASKA | z_NA
+DISTRICT OF COLUMBIA | z_NA
 Year: 1984 transformed
-3111 Counties
+3112 Counties
 
 DISTRICT OF COLUMBIA | z_NA
-ALASKA | z_NA
 Year: 1988 transformed
-3111 Counties
+3112 Counties
 
 DISTRICT OF COLUMBIA | z_NA
-ALASKA | z_NA
 Year: 1992 transformed
-3111 Counties
+3112 Counties
 
 DISTRICT OF COLUMBIA | z_NA
-ALASKA | z_NA
 Year: 1996 transformed
-3111 Counties
+3112 Counties
 
 DISTRICT OF COLUMBIA | z_NA
-ALASKA | z_NA
 Year: 2000 transformed
-3111 Counties
+3112 Counties
 
 DISTRICT OF COLUMBIA | z_NA
-ALASKA | z_NA
 Year: 2004 transformed
-3111 Counties
+3112 Counties
 
 DISTRICT OF COLUMBIA | z_NA
-ALASKA | z_NA
 Year: 2008 transformed
-3111 Counties
+3112 Counties
 
 DISTRICT OF COLUMBIA | z_NA
-ALASKA | z_NA
 Year: 2012 transformed
-3111 Counties
+3112 Counties
 
 Finished transforming dataset: Election_Presidential
 
-Timestamp: 2016-Nov-20 22:18:003113 Counties
+3113 Counties
 
 Finished transforming dataset: Age_Plus_SixtyFive
 
-Timestamp: 2016-Nov-20 22:18:05Year: 2003 transformed
+Year: 2003 transformed
 3113 Counties
 
 Year: 2004 transformed
@@ -95,8 +87,8 @@ Year: 2013 transformed
 
 Finished transforming dataset: Median_Income
 
-Timestamp: 2016-Nov-20 22:18:513113 Counties
+3113 Counties
 
 Finished transforming dataset: Federal_Spending
 
-Timestamp: 2016-Nov-20 22:18:55
+Timestamp: 2016-Nov-20 23:47:41
