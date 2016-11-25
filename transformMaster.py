@@ -44,6 +44,8 @@ for s in config['datasets']:
             for idx, row in cityList.iterrows():
                 st = rawData[rawData['State'] == row['State']]
                 filtered = st['County'].map(lambda x: row['County'] == x)
+                if (filtered[filtered == True].size == 0):
+                    continue
                 lr = st[filtered].tail(1).index.values[0]
                 nVal = rawData.loc[lr]['County'] + ' CITY'
                 rawData.set_value(lr, 'County', nVal)
@@ -58,6 +60,18 @@ for s in config['datasets']:
 
             rawData = rawData.sort_values(['State', 'County'], axis=0)
             rawData.drop_duplicates(subset=['State','County'], inplace=True)
+
+            # Only include "State", "County", and any "YEAR in range"
+            labels = ["State", "County"]
+            for y in range(ds['year_start'], ds['year_end'] + ds['year_increment'], ds['year_increment']):
+                labels.append(str(y))
+
+            # Only include columns defined in the configuration file
+            for col in rawData.columns:
+                if col not in labels:
+                    rawData.drop(col, axis=1, inplace=True)
+
+            # Output the transformed data to file
             print("{:s} transformed. Outputting to: {:s}".format(ds['name'], outPath))
             rawData.to_csv(outPath)
 
@@ -94,7 +108,8 @@ for s in config['datasets']:
                 for idx, row in cityList.iterrows():
                     st = rawData[rawData['State'] == row['State']]
                     filtered = st['County'].map(lambda x: row['County'] == x)
-                    # index of row to update
+                    if (filtered[filtered == True].size == 0):
+                        continue
                     lr = st[filtered].tail(1).index.values[0]
                     nVal = rawData.loc[lr]['County'] + ' CITY'
                     rawData.set_value(lr, 'County', nVal)
@@ -107,8 +122,16 @@ for s in config['datasets']:
                         if (not (row['State'] in MASTER_COUNTY_SET.get(row['County']))):
                             rawData.drop(idx, inplace=True)
 
+                # sort the data file by state name, internally by county
                 rawData = rawData.sort_values(['State', 'County'], axis=0)
                 rawData.drop_duplicates(subset=['State','County'], inplace=True)
+
+                # Only include columns defined in the configuration file
+                for col in rawData.columns:
+                    if col not in ds['data_labels']:
+                        rawData.drop(col, axis=1, inplace=True)
+
+                # Output the transformed data to file
                 print("{:s} transformed. Outputting to: {:s}".format(ds['name'], outPath))
                 rawData.to_csv(outPath)
 

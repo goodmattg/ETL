@@ -57,6 +57,9 @@ for s in config['datasets']:
 
                 # Add 'State' column
                 rawData['State'] = np.zeros(rawData.shape[0])
+                cols = rawData.columns.tolist()
+                cols = cols[-1:] + cols[:-1]
+                rawData = rawData[cols]
                 rawData = rawData.rename(columns = {'Location': 'County'})
                 # county value must be non-null
                 rawData = rawData.dropna(thresh=1, subset=['County'])
@@ -117,6 +120,9 @@ for s in config['datasets']:
                 if ds['loc_single_column']:
                     # add 'State' column
                     rawData['State'] = np.zeros(rawData.shape[0])
+                    cols = rawData.columns.tolist()
+                    cols = cols[-1:] + cols[:-1]
+                    rawData = rawData[cols]
                     rawData = rawData.rename(columns = {'Location': 'County'})
                     # county value must be non-null
                     rawData = rawData.dropna(thresh=1, subset=['County'])
@@ -156,7 +162,8 @@ for s in config['datasets']:
 
         f_checksum.write("Finished cleaning dataset: {:s}\n".format(ds['name']))
 
-    except:
+    except Exception as e:
+        print(e)
         f_checksum.write("ERROR cleaning dataset: {:s}\n".format(ds['name']))
 
 f_checksum.write('Timestamp: {:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now()))
