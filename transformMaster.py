@@ -19,6 +19,7 @@ mf_template = Template('$base$type$fname$year$ftype')
 
 # load the set of counties with "CITY"
 cityList = pd.read_csv('CountyLists/citySet.csv')
+baseList = pd.read_csv('CountyLists/baseSet.csv')
 
 # get the master set of counties to check against
 MASTER_COUNTY_SET = hp.getDictionarySet()
@@ -36,6 +37,8 @@ for s in config['datasets']:
             # Set up input / output paths
             absPath = sf_template.substitute(base=ds['directory'], type=CLEAN_DIR, fname=ds['file_base'], ftype=DATA_FTYPE)
             outPath = sf_template.substitute(base=ds['directory'], type=TR_DIR, fname=ds['file_base'], ftype=DATA_FTYPE)
+            yRange = range(ds['year_start'], ds['year_end'] + ds['year_increment'], ds['year_increment'])
+            yRangeStr = [str(y) for y in yRange]
 
             print("Loading: {:s}".format(absPath))
             rawData = pd.read_csv(absPath)
@@ -50,7 +53,7 @@ for s in config['datasets']:
                 nVal = rawData.loc[lr]['County'] + ' CITY'
                 rawData.set_value(lr, 'County', nVal)
 
-            # drop all rows not in the master set
+            # Drop all rows not containg city/state pair in the master set
             for idx, row in rawData.iterrows():
                 if (MASTER_COUNTY_SET.get(row['County']) == None):
                     rawData.drop(idx, inplace=True)
@@ -58,18 +61,22 @@ for s in config['datasets']:
                     if (not (row['State'] in MASTER_COUNTY_SET.get(row['County']))):
                         rawData.drop(idx, inplace=True)
 
-            rawData = rawData.sort_values(['State', 'County'], axis=0)
-            rawData.drop_duplicates(subset=['State','County'], inplace=True)
-
-            # Only include "State", "County", and any "YEAR in range"
-            labels = ["State", "County"]
-            for y in range(ds['year_start'], ds['year_end'] + ds['year_increment'], ds['year_increment']):
-                labels.append(str(y))
+            # Only include "State", "County", and any "YEAR in range" columns
+            labels = ["State", "County"] + yRangeStr
 
             # Only include columns defined in the configuration file
             for col in rawData.columns:
                 if col not in labels:
                     rawData.drop(col, axis=1, inplace=True)
+
+            # # Pad the dataframe with rows corresponding to missing vals from baseList
+            # for idx, row in baseList.iterrows():
+            #     if (rawData[rawData['State']==row['State'] and rawData['County']==row['County']].shape[0] == 0):
+            #         tmpFrame = pd.DataFrame([row['State'],row['County']],columns=[labels])
+            #         rawData.append(tmpFrame)
+
+            rawData = rawData.sort_values(['State', 'County'], axis=0)
+            rawData.drop_duplicates(subset=['State','County'], inplace=True)
 
             # Output the transformed data to file
             print("{:s} transformed. Outputting to: {:s}".format(ds['name'], outPath))
@@ -83,8 +90,10 @@ for s in config['datasets']:
 
             f_checksum.write("{:d} Counties\n\n".format(rawData.shape[0]))
 
-        else:
-          # multiple files
+        # ----------------------------------------------------------------------
+
+        else: # HANDLE MULTIPLE FILES
+
             for year in hp.yearList(ds['year_start'],
                        ds['year_end'],
                        ds['year_increment'],
@@ -122,14 +131,43 @@ for s in config['datasets']:
                         if (not (row['State'] in MASTER_COUNTY_SET.get(row['County']))):
                             rawData.drop(idx, inplace=True)
 
-                # sort the data file by state name, internally by county
-                rawData = rawData.sort_values(['State', 'County'], axis=0)
-                rawData.drop_duplicates(subset=['State','County'], inplace=True)
-
                 # Only include columns defined in the configuration file
                 for col in rawData.columns:
                     if col not in ds['data_labels']:
                         rawData.drop(col, axis=1, inplace=True)
+
+                removeFrame = pd.DataFrame(columns=ds['data_labels'])
+                removeList = []
+
+                # Pad the dataframe with rows corresponding to missing vals from baseList
+                for idx, row in baseList.iterrows():
+                    if not (any(rawData[rawData['State']==row['State']].County == row['County'])):
+                        removeList.append((row['State'],row['County']))
+                        # tmpSC = np.array([[row['State'],row['County']]])
+                        # tmpZeroPad = np.zeros([1, len(ds['data_labels'])-2])
+                        # tmpRow = np.concatenate((tmpSC, tmpZeroPad), axis=1)
+                        # tmpRow = tmpRow.tolist()
+                        # tmpRow = tmpRow[0]
+                        # rawData.loc[rawData.shape[0]] = tmpRow
+
+                # we have this weird list of tuples we need to then put into a dataframe...
+
+                for pair in removeList:
+                    tmpSC = np.array([pair[0], pair[1]])
+                    print(pair)
+
+                    tmpZeroPad = np.zeros([1, len(ds['data_labels'])-2])
+                    tmpRow = np.concatenate((tmpSC, tmpZeroPad), axis=1)
+                    tmpRow = tmpRow.tolist()
+                    tmpRow = tmpRow[0]
+                    removeFrame[removeFrame.shape[0]] = tmpRow
+                    print(removeFrame.shape)
+
+
+
+                # sort the data file by state name, internally by county
+                rawData = rawData.sort_values(['State', 'County'], axis=0)
+                rawData.drop_duplicates(subset=['State','County'], inplace=True)
 
                 # Output the transformed data to file
                 print("{:s} transformed. Outputting to: {:s}".format(ds['name'], outPath))
@@ -148,8 +186,8 @@ for s in config['datasets']:
         f_checksum.write("Finished transforming dataset: {:s}\n\n".format(ds['name']))
         f_checksum.write("---------------------------------------------------\n")
 
-    except:
-
+    except Exception as e:
+        print(e)
         f_checksum.write("ERROR transforming dataset: {:s}\n".format(ds['name']))
 
 f_checksum.write('Timestamp: {:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now()))

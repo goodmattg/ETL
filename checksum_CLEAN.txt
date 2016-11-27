@@ -7,4 +7,4 @@ Finished cleaning dataset: Percentage_White
 Finished cleaning dataset: Population_Density
 Finished cleaning dataset: Age_Plus_SixtyFive
 Finished cleaning dataset: Federal_Spending
-Timestamp: 2016-Nov-24 21:16:53
+Timestamp: 2016-Nov-26 10:44:38
