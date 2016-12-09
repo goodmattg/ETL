@@ -136,34 +136,28 @@ for s in config['datasets']:
                     if col not in ds['data_labels']:
                         rawData.drop(col, axis=1, inplace=True)
 
-                removeFrame = pd.DataFrame(columns=ds['data_labels'])
-                removeList = []
 
                 # Pad the dataframe with rows corresponding to missing vals from baseList
+                removeList = []
                 for idx, row in baseList.iterrows():
                     if not (any(rawData[rawData['State']==row['State']].County == row['County'])):
                         removeList.append((row['State'],row['County']))
-                        # tmpSC = np.array([[row['State'],row['County']]])
-                        # tmpZeroPad = np.zeros([1, len(ds['data_labels'])-2])
-                        # tmpRow = np.concatenate((tmpSC, tmpZeroPad), axis=1)
-                        # tmpRow = tmpRow.tolist()
-                        # tmpRow = tmpRow[0]
-                        # rawData.loc[rawData.shape[0]] = tmpRow
 
-                # we have this weird list of tuples we need to then put into a dataframe...
-
-                for pair in removeList:
-                    tmpSC = np.array([pair[0], pair[1]])
-                    print(pair)
-
+                dataRemove = np.zeros([len(removeList), len(ds['data_labels'])])
+                for idx, pair in enumerate(removeList):
+                    tmpSC = np.matrix([pair[0], pair[1]])
+                    print('h1')
                     tmpZeroPad = np.zeros([1, len(ds['data_labels'])-2])
+                    print('h2')
+                    print(tmpSC.shape)
+                    print(tmpZeroPad.shape)
                     tmpRow = np.concatenate((tmpSC, tmpZeroPad), axis=1)
-                    tmpRow = tmpRow.tolist()
-                    tmpRow = tmpRow[0]
-                    removeFrame[removeFrame.shape[0]] = tmpRow
-                    print(removeFrame.shape)
+                    print('h3')
+                    dataRemove[idx,:] = tmpRow
+                    print('h4')
 
-
+                removeFrame = pd.DataFrame(data=dataRemove, columns=ds['data_labels'])
+                print(removeFrame)
 
                 # sort the data file by state name, internally by county
                 rawData = rawData.sort_values(['State', 'County'], axis=0)
