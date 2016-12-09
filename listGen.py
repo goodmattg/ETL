@@ -1,33 +1,43 @@
 import pandas as pd
 import numpy as np
 
+def txnCounty(c):
+    try:
+        c = c.upper()
+        c = c.replace("COUNTY","")
+        c = c.replace("CITY","")
+        c = c.strip()
+        c = c.replace("'","")
+        c = c.replace(".","")
+        c = c.replace(",","")
+        return c
+    except:
+        print("ERR on: {:s}".format(c))
+
+
 def genList(target, output):
     d = pd.read_csv(target)
     assert ("County" in d.columns)
     assert ("FIPS" in d.columns)
-    assert ("County" in d.columns)
+    assert ("State" in d.columns)
 
-    d = d[d['FIPS'] != 0] # Only include counties w/ in states
+    # Only include counties w/ in states
+    d = d[d['FIPS'] != 0]
+    # Don't include Alaska
+    d = d[d['State'] != 'AK']
+    # Don't include DC
+    d = d[d['State'] != 'DC']
+    # Transform county set
+    d['County'] = d['County'].map(lambda c: txnCounty(c))
+    # Keep only specific columns in output dataframe
+    d = d[['State', 'County']]
+
+    er = pd.DataFrame([['z_NA', 'ALASKA'], ['z_NA', 'DISTRICT OF COLUMBIA']], columns=['State','County'])
+    d = d.append(er)
+    # Sort by County within State
     d = d.sort_values(['State', 'County'], axis=0)
-
-    counties = d["County"].tolist()
-
-    for idx in range(len(counties)):
-        try:
-            c = counties[idx]
-            c = c.upper()
-            c = c.replace("COUNTY","")
-            c = c.replace("CITY","")
-            c = c.strip()
-            c = c.replace("'","")
-            c = c.replace(".","")
-            c = c.replace(",","")
-            counties[idx] = c
-        except:
-            print("ERR on: {:s}".format(c))
-
-    df = pd.DataFrame(counties, columns=["County"])
-    df.to_csv(output, index=False)
+    # Write dataframe to file
+    d.to_csv(output, index=False, columns=['State','County'])
 
 '''
 Callable from command line:
