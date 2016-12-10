@@ -63,22 +63,34 @@ for s in config['datasets']:
                 # county value must be non-null
                 rawData = rawData.dropna(thresh=1, subset=['County'])
 
+                # split the single column
                 for idx, row in rawData.iterrows():
                     tmp = row['County'].split(',')
-
+                    row['County'] = tmp[0]
                     if (len(tmp) > 1):
-                        row['State'] = tmp[1].upper().strip()
-                        row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
+                        row['State'] = tmp[1]
                     else:
                         # matches either STATE, UNITED STATES, District of Columbia
-                        row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
                         row['State'] = "z_NA"
+                    rawData.loc[idx] = row
+
+                # drop raw duplicates
+                rawData.drop_duplicates(subset=['State','County'], inplace=True)
+
+                # clean State and County values
+                for idx, row in rawData.iterrows():
+                    if (row['State'] != 'z_NA'):
+                        row['State'] = row['State'].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
+                    row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
                     rawData.loc[idx] = row
 
             else: # data is already stored in "State" and "County"
 
                 # county AND state value must be non-null
                 rawData = rawData.dropna(thresh=2, subset=['County', 'State'])
+                # drop raw duplicates
+                rawData.drop_duplicates(subset=['State','County'], inplace=True)
+
 
                 for idx, row in rawData.iterrows():
                     if (ds['fips_flag'] & row['FIPS']==0):
@@ -129,19 +141,30 @@ for s in config['datasets']:
                     # split the single column
                     for idx, row in rawData.iterrows():
                         tmp = row['County'].split(',')
-
+                        row['County'] = tmp[0]
                         if (len(tmp) > 1):
-                            row['State'] = tmp[1].upper().strip()
-                            row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
+                            row['State'] = tmp[1]
                         else:
                             # matches either STATE, UNITED STATES, District of Columbia
-                            row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
                             row['State'] = "z_NA"
+                        rawData.loc[idx] = row
+
+                    # drop raw duplicates
+                    rawData.drop_duplicates(subset=['State','County'], inplace=True)
+
+                    # clean State and County values
+                    for idx, row in rawData.iterrows():
+                        if (row['State'] != 'z_NA'):
+                            row['State'] = row['State'].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
+                        row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
                         rawData.loc[idx] = row
 
                 else:
                     # county AND state value must be non-null
                     rawData = rawData.dropna(thresh=2, subset=['County', 'State'])
+                    # drop raw duplicates
+                    rawData.drop_duplicates(subset=['State','County'], inplace=True)
+
 
                     # data is already stored in "State" and "County"
                     for idx, row in rawData.iterrows():

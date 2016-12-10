@@ -1,0 +1,4 @@
+Finished cleaning dataset: Election_Senatorial
+Finished cleaning dataset: Election_Presidential
+Finished cleaning dataset: Median_Income
+Timestamp: 2016-Dec-10 16:21:33

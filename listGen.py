@@ -39,10 +39,10 @@ def genList(target, output):
 
     er = pd.DataFrame([['z_NA', 'ALASKA'], ['z_NA', 'DISTRICT OF COLUMBIA']], columns=['State','County'])
     d = d.append(er)
-    # Sort by County within State
-    d = d.sort_values(['State', 'County'], axis=0)
     # Convert state abbreviations to expanded
     d['State'] = d['State'].map(abbrevMap, na_action='ignore')
+    # Sort by County within State
+    d = d.sort_values(['State', 'County'], axis=0)
     # Write dataframe to file
     d.to_csv(output, index=False, columns=['State','County'])
 
