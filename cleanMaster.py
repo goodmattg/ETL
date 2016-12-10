@@ -32,7 +32,6 @@ abbrevMap = hp.getAbbreviationMap()
 
 f_checksum = open('checksum_CLEAN.txt', 'w')
 
-
 for s in config['datasets']:
     try:
 
@@ -69,10 +68,10 @@ for s in config['datasets']:
 
                     if (len(tmp) > 1):
                         row['State'] = tmp[1].upper().strip()
-                        row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").strip()
+                        row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
                     else:
                         # matches either STATE, UNITED STATES, District of Columbia
-                        row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").strip()
+                        row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
                         row['State'] = "z_NA"
                     rawData.loc[idx] = row
 
@@ -86,13 +85,13 @@ for s in config['datasets']:
                         row['State'] = 'z_NA'
                     else:
                         row['State'] = row['State'].upper().strip()
-                    row['County'] = row['County'].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").strip()
+                    row['County'] = row['County'].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
                     rawData.loc[idx] = row
 
             rawData['State'] = rawData['State'].map(abbrevMap, na_action='ignore')
             rawData = rawData.sort_values(['State', 'County'], axis=0)
             print("{:s} cleaned. Outputting to: {:s}".format(ds['name'], outPath))
-            rawData.to_csv(outPath)
+            rawData.to_csv(outPath,index=False)
 
 
         else:
@@ -133,10 +132,10 @@ for s in config['datasets']:
 
                         if (len(tmp) > 1):
                             row['State'] = tmp[1].upper().strip()
-                            row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").strip()
+                            row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
                         else:
                             # matches either STATE, UNITED STATES, District of Columbia
-                            row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").strip()
+                            row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
                             row['State'] = "z_NA"
                         rawData.loc[idx] = row
 
@@ -152,13 +151,13 @@ for s in config['datasets']:
                             continue
                         else:
                             row['State'] = row['State'].upper().strip()
-                        row['County'] = row['County'].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").strip()
+                        row['County'] = row['County'].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
                         rawData.loc[idx] = row
 
                 rawData['State'] = rawData['State'].map(abbrevMap, na_action='ignore')
                 rawData = rawData.sort_values(['State', 'County'], axis=0)
                 print("{:s} cleaned. Outputting to: {:s}".format(ds['name'], outPath))
-                rawData.to_csv(outPath)
+                rawData.to_csv(outPath,index=False)
 
         f_checksum.write("Finished cleaning dataset: {:s}\n".format(ds['name']))
 

@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 import yaml as yaml
 
-def getDictionarySet():
+def getDictionarySet(masterList):
     retDict = {}
-    baseSet = pd.read_csv('CountyLists/baseSet.csv')
+    baseSet = pd.read_csv(masterList)
 
     for idx, row in baseSet.iterrows():
         retDict.setdefault(row['County'], [])

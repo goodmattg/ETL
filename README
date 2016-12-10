@@ -1,0 +1,3 @@
+Building the master county list:
+
+python3 listGen.py MedianIncome/RAW/medianIncome_2014.csv CountyLists/masterList.csv

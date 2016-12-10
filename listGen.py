@@ -1,15 +1,17 @@
 import pandas as pd
 import numpy as np
+import helpers as hp
 
 def txnCounty(c):
     try:
         c = c.upper()
         c = c.replace("COUNTY","")
         c = c.replace("CITY","")
-        c = c.strip()
+        c = c.replace("PARISH", "")
         c = c.replace("'","")
         c = c.replace(".","")
         c = c.replace(",","")
+        c = c.strip()
         return c
     except:
         print("ERR on: {:s}".format(c))
@@ -20,6 +22,9 @@ def genList(target, output):
     assert ("County" in d.columns)
     assert ("FIPS" in d.columns)
     assert ("State" in d.columns)
+
+    # load the state abbreviation map
+    abbrevMap = hp.getAbbreviationMap()
 
     # Only include counties w/ in states
     d = d[d['FIPS'] != 0]
@@ -36,6 +41,8 @@ def genList(target, output):
     d = d.append(er)
     # Sort by County within State
     d = d.sort_values(['State', 'County'], axis=0)
+    # Convert state abbreviations to expanded
+    d['State'] = d['State'].map(abbrevMap, na_action='ignore')
     # Write dataframe to file
     d.to_csv(output, index=False, columns=['State','County'])
 
