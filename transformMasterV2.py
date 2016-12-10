@@ -45,11 +45,28 @@ def transformMaster(cityMasterList):
                 print("Loading: {:s}".format(absPath))
                 rd = pd.read_csv(absPath)
 
+                prevCheck = 'NONE'
+
                 addedFrames = pd.DataFrame(data=np.zeros((0,len(rd.columns))), columns=rd.columns)
                 for idx, row in masterList.iterrows():
                     if (rd[(rd['County']==row['County']) & (rd['State']==row['State'])].shape[0] > 0):
-                        # Case: Direct Match to master
-                        continue
+                        if (row['County'] != prevCheck):
+                            prevCheck = row['County']
+                            continue
+                        else:
+                            if (rd[(rd['County']==row['County']) & (rd['State']==row['State'])].shape[0] == 2):
+                                prevCheck = row['County']
+                                continue
+                            else:
+                                padCols = [row['State'], row['County']] + [0] * (len(rd.columns)-2)
+                                tmpFrame = pd.DataFrame([padCols], columns=rd.columns)
+                                addedFrames = addedFrames.append(tmpFrame)
+                                prevCheck = row['County']
+                                continue
+                                # BEDFORD, BEDFORD -> need two matches, if not pad
+
+
+                    prevCheck = row['County']
                     # NO DIRECT MATCH. Focus on counties in the same state
                     stateSub = rd[rd['State']==row['State']]
                     # Compute Levenshtein distance between master county and all counties in state
@@ -129,11 +146,26 @@ def transformMaster(cityMasterList):
                     print("Loading: {:s}".format(absPath))
                     rd = pd.read_csv(absPath)
 
+                    prevCheck = 'NONE'
                     addedFrames = pd.DataFrame(data=np.zeros((0,len(rd.columns))), columns=rd.columns)
                     for idx, row in masterList.iterrows():
                         if (rd[(rd['County']==row['County']) & (rd['State']==row['State'])].shape[0] > 0):
-                            # Case: Direct Match to master
-                            continue
+                            if (row['County'] != prevCheck):
+                                prevCheck = row['County']
+                                continue
+                            else:
+                                if (rd[(rd['County']==row['County']) & (rd['State']==row['State'])].shape[0] == 2):
+                                    prevCheck = row['County']
+                                    continue
+                                else:
+                                    padCols = [row['State'], row['County']] + [0] * (len(rd.columns)-2)
+                                    tmpFrame = pd.DataFrame([padCols], columns=rd.columns)
+                                    addedFrames = addedFrames.append(tmpFrame)
+                                    prevCheck = row['County']
+                                    continue
+                                    # BEDFORD, BEDFORD -> need two matches, if not pad
+
+                        prevCheck = row['County']
                         # NO DIRECT MATCH. Focus on counties in the same state
                         stateSub = rd[rd['State']==row['State']]
                         # Compute Levenshtein distance between master county and all counties in state
