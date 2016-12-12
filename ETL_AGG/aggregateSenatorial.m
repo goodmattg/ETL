@@ -2,16 +2,20 @@ clc; clear all;
 
 dataVectorSize = getCityListSize();
 
-completeDemocrat = zeros(dataVectorSize, length(1984:2:2012));
-completeRepublican = zeros(dataVectorSize, length(1984:2:2012));
-demVotes = zeros(dataVectorSize, length(1984:2:2012));
-repVotes = zeros(dataVectorSize, length(1984:2:2012));
+y_start = 1984; 
+y_end = 2012; 
+y_inc = 2; 
 
-totalVotes = zeros(dataVectorSize, length(1984:2:2012));
+completeDemocrat = zeros(dataVectorSize, length(y_start:y_inc:y_end));
+completeRepublican = zeros(dataVectorSize, length(y_start:y_inc:y_end));
+demVotes = zeros(dataVectorSize, length(y_start:y_inc:y_end));
+repVotes = zeros(dataVectorSize, length(y_start:y_inc:y_end));
 
-for y = 1984:2:2012
-    idx = (y-1984)/2+1;
-    fname = '../ETL/SenatorialReturns/TR/returnsSenatorial_';
+totalVotes = zeros(dataVectorSize, length(y_start:y_inc:y_end));
+
+for y = y_start:y_inc:y_end
+    idx = (y-y_start)/y_inc+1;
+    fname = '../SenatorialReturns/TR/returnsSenatorial_';
     fileID = fopen( strcat(fname,int2str(y),'.csv'));
     rawData = textscan(fileID,'%s %s %d %d', 'Delimiter', ',','HeaderLines',1);
     dem = double(rawData{3});
@@ -27,13 +31,16 @@ for y = 1984:2:2012
     fclose(fileID); 
 end
 
-senData = struct('y_start',1984,...
-                  'y_end',2012, ...
-                  'y_increment',2, ...
+completeRepublican(isnan(completeRepublican) | (completeRepublican == 1)) = 0;
+completeDemocrat(isnan(completeDemocrat) | (completeDemocrat == 1)) = 0;
+
+senData = struct('y_start',y_start,...
+                  'y_end',y_end, ...
+                  'y_increment',y_inc, ...
                   'demPerc',completeDemocrat, ...
                   'repPerc',completeRepublican, ...
                   'totalVotes', totalVotes, ...
                   'States', rawData(1), ...
                   'Counties',rawData(2));
 
-save('../ETL/SenatorialReturns/MAT/senatorialReturns.mat', 'senData')
+save('../SenatorialReturns/MAT/senatorialReturns.mat', 'senData')
