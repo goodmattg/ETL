@@ -24,6 +24,9 @@ def padDataframe(iFrame, masterList):
                 if (iFrame[(iFrame['County']==row['County']) & (iFrame['State']==row['State'])].shape[0] == 2):
                     prevCheck = row['County']
                     continue
+                elif (row['State'] == 'z_NA'):
+                    prevCheck = row['County']
+                    continue
                 else:
                     padCols = [row['State'], row['County']] + [0] * (len(iFrame.columns)-2)
                     tmpFrame = pd.DataFrame([padCols], columns=iFrame.columns)
@@ -187,12 +190,6 @@ def transformMaster(cityMasterList):
                     # Only keep rows not slated to be dropped
                     rd = rd[rd['DROP_ROW'] == 0]
                     rd.drop('DROP_ROW', axis=1, inplace=True)
-
-
-                    # Only include columns defined in the configuration file
-                    # for col in rd.columns:
-                    #     if col not in ds['data_labels']:
-                    #         rd.drop(col, axis=1, inplace=True)
 
                     # Output the transformed data to file
                     print("{:s} transformed. Outputting to: {:s}".format(ds['name'], outPath))

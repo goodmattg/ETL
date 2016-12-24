@@ -56,10 +56,13 @@ for s in config['datasets']:
 
                 # Add 'State' column
                 rawData['State'] = np.zeros(rawData.shape[0])
-                cols = rawData.columns.tolist()
-                cols = cols[-1:] + cols[:-1]
-                rawData = rawData[cols]
                 rawData = rawData.rename(columns = {'Location': 'County'})
+                # Rearrange columns. [State, County, .... , rest]
+                cols = rawData.columns.tolist()
+                cols.pop(cols.index('State'))
+                cols.pop(cols.index('County'))
+                cols = ['State', 'County'] + cols
+                rawData = rawData[cols]
                 # county value must be non-null
                 rawData = rawData.dropna(thresh=1, subset=['County'])
 
@@ -72,6 +75,11 @@ for s in config['datasets']:
                     else:
                         # matches either STATE, UNITED STATES, District of Columbia
                         row['State'] = "z_NA"
+                    rawData.loc[idx] = row
+
+                # Convert county list to uppercase
+                for idx, row in rawData.iterrows():
+                    row['County'] = row['County'].upper()
                     rawData.loc[idx] = row
 
                 # drop raw duplicates
@@ -90,8 +98,11 @@ for s in config['datasets']:
                 rawData = rawData.dropna(thresh=2, subset=['County', 'State'])
                 # drop raw duplicates
                 rawData.drop_duplicates(subset=['State','County'], inplace=True)
+                # Rearrange columns. [State, County, .... , rest]
                 cols = rawData.columns.tolist()
-                cols = ['State', 'County'] + cols[2:]
+                cols.pop(cols.index('State'))
+                cols.pop(cols.index('County'))
+                cols = ['State', 'County'] + cols
                 rawData = rawData[cols]
 
                 for idx, row in rawData.iterrows():
@@ -133,10 +144,13 @@ for s in config['datasets']:
                 if ds['loc_single_column']:
                     # add 'State' column
                     rawData['State'] = np.zeros(rawData.shape[0])
-                    cols = rawData.columns.tolist()
-                    cols = cols[-1:] + cols[:-1]
-                    rawData = rawData[cols]
                     rawData = rawData.rename(columns = {'Location': 'County'})
+                    # Rearrange columns. [State, County, .... , rest]
+                    cols = rawData.columns.tolist()
+                    cols.pop(cols.index('State'))
+                    cols.pop(cols.index('County'))
+                    cols = ['State', 'County'] + cols
+                    rawData = rawData[cols]
                     # county value must be non-null
                     rawData = rawData.dropna(thresh=1, subset=['County'])
 
@@ -149,6 +163,11 @@ for s in config['datasets']:
                         else:
                             # matches either STATE, UNITED STATES, District of Columbia
                             row['State'] = "z_NA"
+                        rawData.loc[idx] = row
+
+                    # Convert county list to uppercase
+                    for idx, row in rawData.iterrows():
+                        row['County'] = row['County'].upper()
                         rawData.loc[idx] = row
 
                     # drop raw duplicates
@@ -166,8 +185,11 @@ for s in config['datasets']:
                     rawData = rawData.dropna(thresh=2, subset=['County', 'State'])
                     # drop raw duplicates
                     rawData.drop_duplicates(subset=['State','County'], inplace=True)
+                    # Rearrange columns. [State, County, .... , rest]
                     cols = rawData.columns.tolist()
-                    cols = ['State', 'County'] + cols[2:]
+                    cols.pop(cols.index('State'))
+                    cols.pop(cols.index('County'))
+                    cols = ['State', 'County'] + cols
                     rawData = rawData[cols]
 
                     # data is already stored in "State" and "County"

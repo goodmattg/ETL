@@ -5,45 +5,45 @@ dirHeaders:
     cleaned_dir: "CLEAN/"
     transformed_dir: "TR/"
 datasets:
-    # - set:
-    #     name: "Election_Senatorial"
-    #     tagline: "senatorial elections returns"
-    #     directory: "SenatorialReturns/"
-    #     year_start: 1984
-    #     year_end: 2014
-    #     year_increment: 2
-    #     years_absent: []
-    #     single_file: false
-    #     data_labels: ["State", "County", "Dem. Votes", "Rep. Votes"]
-    #     loc_single_column: false
-    #     file_base: "returnsSenatorial_"
-    #     fips_flag: false
-    # - set:
-    #     name: "Election_Presidential"
-    #     tagline: "presidential election returns"
-    #     directory: "PresidentialReturns/"
-    #     year_start: 1984
-    #     year_end: 2012
-    #     year_increment: 4
-    #     years_absent: []
-    #     single_file: false
-    #     data_labels: ["State", "County", "Dem. Votes", "Rep. Votes"]
-    #     loc_single_column: false
-    #     file_base: "presidentialReturns_"
-    #     fips_flag: false
-    # - set:
-    #     name: "Median_Income"
-    #     tagline: "median income"
-    #     directory: "MedianIncome/"
-    #     year_start: 2003
-    #     year_end: 2013
-    #     year_increment: 1
-    #     years_absent: []
-    #     single_file: false
-    #     data_labels: ["State", "County", "MedianIncome"]
-    #     loc_single_column: false
-    #     file_base: "medianIncome_"
-    #     fips_flag: true
+    - set:
+        name: "Election_Senatorial"
+        tagline: "senatorial elections returns"
+        directory: "SenatorialReturns/"
+        year_start: 1984
+        year_end: 2014
+        year_increment: 2
+        years_absent: []
+        single_file: false
+        data_labels: ["State", "County", "Dem. Votes", "Rep. Votes"]
+        loc_single_column: false
+        file_base: "returnsSenatorial_"
+        fips_flag: false
+    - set:
+        name: "Election_Presidential"
+        tagline: "presidential election returns"
+        directory: "PresidentialReturns/"
+        year_start: 1984
+        year_end: 2012
+        year_increment: 4
+        years_absent: []
+        single_file: false
+        data_labels: ["State", "County", "Dem. Votes", "Rep. Votes"]
+        loc_single_column: false
+        file_base: "presidentialReturns_"
+        fips_flag: false
+    - set:
+        name: "Median_Income"
+        tagline: "median income"
+        directory: "MedianIncome/"
+        year_start: 2003
+        year_end: 2013
+        year_increment: 1
+        years_absent: []
+        single_file: false
+        data_labels: ["State", "County", "MedianIncome"]
+        loc_single_column: false
+        file_base: "medianIncome_"
+        fips_flag: true
     - set:
         name: "Election_Gubernatorial"
         tagline: "gubernatorial elections data"
