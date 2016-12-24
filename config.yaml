@@ -5,82 +5,95 @@ dirHeaders:
     cleaned_dir: "CLEAN/"
     transformed_dir: "TR/"
 datasets:
+    # - set:
+    #     name: "Election_Senatorial"
+    #     tagline: "senatorial elections returns"
+    #     directory: "SenatorialReturns/"
+    #     year_start: 1984
+    #     year_end: 2014
+    #     year_increment: 2
+    #     years_absent: []
+    #     single_file: false
+    #     data_labels: ["State", "County", "Dem. Votes", "Rep. Votes"]
+    #     loc_single_column: false
+    #     file_base: "returnsSenatorial_"
+    #     fips_flag: false
+    # - set:
+    #     name: "Election_Presidential"
+    #     tagline: "presidential election returns"
+    #     directory: "PresidentialReturns/"
+    #     year_start: 1984
+    #     year_end: 2012
+    #     year_increment: 4
+    #     years_absent: []
+    #     single_file: false
+    #     data_labels: ["State", "County", "Dem. Votes", "Rep. Votes"]
+    #     loc_single_column: false
+    #     file_base: "presidentialReturns_"
+    #     fips_flag: false
+    # - set:
+    #     name: "Median_Income"
+    #     tagline: "median income"
+    #     directory: "MedianIncome/"
+    #     year_start: 2003
+    #     year_end: 2013
+    #     year_increment: 1
+    #     years_absent: []
+    #     single_file: false
+    #     data_labels: ["State", "County", "MedianIncome"]
+    #     loc_single_column: false
+    #     file_base: "medianIncome_"
+    #     fips_flag: true
     - set:
-        name: "Election_Senatorial"
-        tagline: "senatorial elections returns"
-        directory: "SenatorialReturns/"
-        year_start: 1984
+        name: "Election_Gubernatorial"
+        tagline: "gubernatorial elections data"
+        directory: "GovernorReturns/"
+        year_start: 2008
+        year_end: 2015
+        year_increment: 1
+        years_absent: []
+        single_file: false
+        data_labels: ["State", "County", "Total Vote", "Dem. Votes", "Rep. Votes"]
+        loc_single_column: false
+        file_base: "returnsGubernatorial_"
+        fips_flag: false
+    - set:
+        name: "Election_House"
+        tagline: "house race elections data"
+        directory: "HouseReturns/"
+        year_start: 2008
         year_end: 2014
         year_increment: 2
         years_absent: []
         single_file: false
-        data_labels: ["State", "County", "Dem. Votes", "Rep. Votes"]
+        data_labels: ["State", "County", "Total Vote", "Dem. Votes", "Rep. Votes"]
         loc_single_column: false
-        file_base: "returnsSenatorial_"
+        file_base: "returnsHouse_"
         fips_flag: false
     - set:
-        name: "Election_Presidential"
-        tagline: "presidential election returns"
-        directory: "PresidentialReturns/"
-        year_start: 1984
-        year_end: 2012
-        year_increment: 4
+        name: "Population"
+        tagline: "population data"
+        directory: "Population/"
+        year_start: 1960
+        year_end: 2010
+        year_increment: 10
         years_absent: []
-        single_file: false
-        data_labels: ["State", "County", "Dem. Votes", "Rep. Votes"]
-        loc_single_column: false
-        file_base: "presidentialReturns_"
+        single_file: true
+        loc_single_column: true
+        file_base: "rawPopulation"
         fips_flag: false
     - set:
-        name: "Median_Income"
-        tagline: "median income"
-        directory: "MedianIncome/"
-        year_start: 2003
-        year_end: 2013
-        year_increment: 1
+        name: "Race"
+        tagline: "race"
+        directory: "Race/"
+        year_start: 1960
+        year_end: 2010
+        year_increment: 10
         years_absent: []
-        single_file: false
-        data_labels: ["State", "County", "MedianIncome"]
-        loc_single_column: false
-        file_base: "medianIncome_"
-        fips_flag: true
-    # - set:
-    #     name: "Population"
-    #     tagline: "raw population data"
-    #     directory: "Population/"
-    #     year_start: 1960
-    #     year_end: 2010
-    #     year_increment: 10
-    #     years_absent: []
-    #     single_file: true
-    #     loc_single_column: true
-    #     file_base: "populationRaw"
-    #     fips_flag: false
-    # - set:
-    #     name: "Percentage_Female"
-    #     tagline: "gender"
-    #     directory: "Gender/"
-    #     year_start: 2000
-    #     year_end: 2009
-    #     year_increment: 1
-    #     years_absent: []
-    #     single_file: true
-    #     loc_single_column: true
-    #     file_base: "genderRaw"
-    #     fips_flag: false
-
-    # - set:
-    #     name: "Percentage_White"
-    #     tagline: "race"
-    #     directory: "Race/"
-    #     year_start: 1960
-    #     year_end: 2010
-    #     year_increment: 10
-    #     years_absent: []
-    #     single_file: true
-    #     loc_single_column: true
-    #     file_base: "raceRaw"
-    #     fips_flag: false
+        single_file: true
+        loc_single_column: true
+        file_base: "rawRace"
+        fips_flag: false
 
     # - set:
     #     name: "Population_Density"

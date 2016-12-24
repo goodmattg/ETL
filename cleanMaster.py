@@ -81,7 +81,7 @@ for s in config['datasets']:
                 for idx, row in rawData.iterrows():
                     if (row['State'] != 'z_NA'):
                         row['State'] = row['State'].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
-                    row['County'] = tmp[0].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
+                    row['County'] = row['County'].upper().replace("COUNTY","").replace("PARISH","").replace("'","").replace("CITY","").replace(".","").replace(",","").strip()
                     rawData.loc[idx] = row
 
             else: # data is already stored in "State" and "County"
@@ -90,7 +90,9 @@ for s in config['datasets']:
                 rawData = rawData.dropna(thresh=2, subset=['County', 'State'])
                 # drop raw duplicates
                 rawData.drop_duplicates(subset=['State','County'], inplace=True)
-
+                cols = rawData.columns.tolist()
+                cols = ['State', 'County'] + cols[2:]
+                rawData = rawData[cols]
 
                 for idx, row in rawData.iterrows():
                     if (ds['fips_flag'] & row['FIPS']==0):
@@ -164,7 +166,9 @@ for s in config['datasets']:
                     rawData = rawData.dropna(thresh=2, subset=['County', 'State'])
                     # drop raw duplicates
                     rawData.drop_duplicates(subset=['State','County'], inplace=True)
-
+                    cols = rawData.columns.tolist()
+                    cols = ['State', 'County'] + cols[2:]
+                    rawData = rawData[cols]
 
                     # data is already stored in "State" and "County"
                     for idx, row in rawData.iterrows():

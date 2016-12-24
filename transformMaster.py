@@ -6,6 +6,62 @@ import numpy as np
 import pdb
 import datetime
 
+
+'''
+Iterate over dataframe.
+Add rows corresponding to missing county/state entries (pad data)
+'''
+def padDataframe(iFrame, masterList):
+    prevCheck = 'NONE'
+    addedFrames = pd.DataFrame(data=np.zeros((0,len(iFrame.columns))), columns=iFrame.columns)
+
+    for idx, row in masterList.iterrows():
+        if (iFrame[(iFrame['County']==row['County']) & (iFrame['State']==row['State'])].shape[0] > 0):
+            if (row['County'] != prevCheck):
+                prevCheck = row['County']
+                continue
+            else:
+                if (iFrame[(iFrame['County']==row['County']) & (iFrame['State']==row['State'])].shape[0] == 2):
+                    prevCheck = row['County']
+                    continue
+                else:
+                    padCols = [row['State'], row['County']] + [0] * (len(iFrame.columns)-2)
+                    tmpFrame = pd.DataFrame([padCols], columns=iFrame.columns)
+                    addedFrames = addedFrames.append(tmpFrame, ignore_index=True)
+                    prevCheck = row['County']
+                    continue
+                    # BEDFORD, BEDFORD -> need two matches, if not pad
+        prevCheck = row['County']
+        # NO DIRECT MATCH. Focus on counties in the same state
+        stateSub = iFrame[iFrame['State']==row['State']]
+        # Compute Levenshtein distance between master county and all counties in state
+        distances = stateSub['County'].map(lambda x: lev.distance(x, row['County']))
+        if (distances[distances == 1].shape[0] == 1):
+            # Single county match w/ lev dist. 1
+            matches = distances[distances == 1]
+            ind = matches[-1:].index[0]
+            print("Target: {:s} | Match {:s}".format(row['County'], iFrame.get_value(ind, 'County')))
+            iFrame = iFrame.set_value(ind, 'County', row['County'])
+        elif (distances[distances == 1].shape[0] > 1):
+            # More than one county match w/ lev. dist 1
+            matches = distances[distances == 1]
+            ind = matches[-1:].index[0]
+            print("Target: {:s} | Match {:s}".format(row['County'], iFrame.get_value(ind, 'County')))
+            iFrame = iFrame.set_value(ind, 'County', row['County'])
+        else:
+            # pad with zeros rows at end of dataframe of missing county
+            padCols = [row['State'], row['County']] + [0] * (len(iFrame.columns)-2)
+            tmpFrame = pd.DataFrame([padCols], columns=iFrame.columns)
+            addedFrames = addedFrames.append(tmpFrame, ignore_index=True)
+
+    # append pad rows to the dataframe
+    iFrame = iFrame.append(addedFrames, ignore_index=True)
+    # Sort by State, then internally by County
+    iFrame = iFrame.sort_values(['State', 'County'], axis=0)
+    return iFrame
+
+
+
 def transformMaster(cityMasterList):
 
     config = hp.getConfigData()
@@ -35,7 +91,7 @@ def transformMaster(cityMasterList):
             print("Processing dataset: {:s}".format(ds['name']))
 
             if ds['single_file']:
-
+                print("Single file\n")
                 # Set up input / output paths
                 absPath = sf_template.substitute(base=ds['directory'], type=CLEAN_DIR, fname=ds['file_base'], ftype=DATA_FTYPE)
                 outPath = sf_template.substitute(base=ds['directory'], type=TR_DIR, fname=ds['file_base'], ftype=DATA_FTYPE)
@@ -45,70 +101,31 @@ def transformMaster(cityMasterList):
                 print("Loading: {:s}".format(absPath))
                 rd = pd.read_csv(absPath)
 
-                prevCheck = 'NONE'
-
-                addedFrames = pd.DataFrame(data=np.zeros((0,len(rd.columns))), columns=rd.columns)
-                for idx, row in masterList.iterrows():
-                    if (rd[(rd['County']==row['County']) & (rd['State']==row['State'])].shape[0] > 0):
-                        if (row['County'] != prevCheck):
-                            prevCheck = row['County']
-                            continue
-                        else:
-                            if (rd[(rd['County']==row['County']) & (rd['State']==row['State'])].shape[0] == 2):
-                                prevCheck = row['County']
-                                continue
-                            else:
-                                padCols = [row['State'], row['County']] + [0] * (len(rd.columns)-2)
-                                tmpFrame = pd.DataFrame([padCols], columns=rd.columns)
-                                addedFrames = addedFrames.append(tmpFrame)
-                                prevCheck = row['County']
-                                continue
-                                # BEDFORD, BEDFORD -> need two matches, if not pad
-
-
-                    prevCheck = row['County']
-                    # NO DIRECT MATCH. Focus on counties in the same state
-                    stateSub = rd[rd['State']==row['State']]
-                    # Compute Levenshtein distance between master county and all counties in state
-                    distances = stateSub['County'].map(lambda x: lev.distance(x, row['County']))
-                    if (distances[distances == 1].shape[0] == 1):
-                        # Single county match w/ lev dist. 1
-                        matches = distances[distances == 1]
-                        ind = matches[-1:].index[0]
-                        print("Target: {:s} | Match {:s}".format(row['County'], rd.get_value(ind, 'County')))
-                        rd = rd.set_value(ind, 'County', row['County'])
-                    elif (distances[distances == 1].shape[0] > 1):
-                        # More than one county match w/ lev. dist 1
-                        matches = distances[distances == 1]
-                        ind = matches[-1:].index[0]
-                        print("Target: {:s} | Match {:s}".format(row['County'], rd.get_value(ind, 'County')))
-                        rd = rd.set_value(ind, 'County', row['County'])
-                    else:
-                        # pad with zeros rows at end of dataframe of missing county
-                        padCols = [row['State'], row['County']] + [0] * (len(rd.columns)-2)
-                        tmpFrame = pd.DataFrame([padCols], columns=rd.columns)
-                        addedFrames = addedFrames.append(tmpFrame)
-
-                # append pad rows to the dataframe
-                rd = rd.append(addedFrames)
-                # Sort by State, then internally by County
-                rd = rd.sort_values(['State', 'County'], axis=0)
-
-                # Drop all rows not containg city/state pair in the master set
-                for idx, row in rd.iterrows():
-                    if (MASTER_COUNTY_SET.get(row['County']) == None):
-                        rd.drop(idx, inplace=True)
-                    else:
-                        if (not (row['State'] in MASTER_COUNTY_SET.get(row['County']))):
-                            rd.drop(idx, inplace=True)
-
                 # Only include "State", "County", and any "YEAR in range" columns
                 labels = ["State", "County"] + yRangeStr
-
                 # Only include columns defined in the configuration file
                 for col in rd.columns:
                     if col not in labels:
                         rd.drop(col, axis=1, inplace=True)
+
+                # pad the dataframe with the master county list
+                rd = padDataframe(rd, masterList)
+
+                # Marker to indicate if row should be dropped
+                rd['DROP_ROW'] = np.zeros(rd.shape[0])
+                # Drop all rows not containg city/state pair in the master set
+                for idx, row in rd.iterrows():
+                    if (MASTER_COUNTY_SET.get(row['County']) == None):
+                        print(row['County'])
+                        rd.set_value(idx,'DROP_ROW',1)
+                    else:
+                        if (not (row['State'] in MASTER_COUNTY_SET.get(row['County']))):
+                            print(row['County'])
+                            rd.set_value(idx,'DROP_ROW',1)
+
+                # Only keep rows not slated to be dropped
+                rd = rd[rd['DROP_ROW'] == 0]
+                rd.drop('DROP_ROW', axis=1, inplace=True)
 
                 # Output the transformed data to file
                 print("{:s} transformed. Outputting to: {:s}".format(ds['name'], outPath))
@@ -122,10 +139,12 @@ def transformMaster(cityMasterList):
 
                 f_checksum.write("{:d} Counties\n\n".format(rd.shape[0]))
 
+
             # ----------------------------------------------------------------------
 
-            else: # HANDLE MULTIPLE FILES
 
+            else: # HANDLE MULTIPLE FILES
+                print("Multiple files\n")
                 for year in hp.yearList(ds['year_start'],
                            ds['year_end'],
                            ds['year_increment'],
@@ -146,65 +165,34 @@ def transformMaster(cityMasterList):
                     print("Loading: {:s}".format(absPath))
                     rd = pd.read_csv(absPath)
 
-                    prevCheck = 'NONE'
-                    addedFrames = pd.DataFrame(data=np.zeros((0,len(rd.columns))), columns=rd.columns)
-                    for idx, row in masterList.iterrows():
-                        if (rd[(rd['County']==row['County']) & (rd['State']==row['State'])].shape[0] > 0):
-                            if (row['County'] != prevCheck):
-                                prevCheck = row['County']
-                                continue
-                            else:
-                                if (rd[(rd['County']==row['County']) & (rd['State']==row['State'])].shape[0] == 2):
-                                    prevCheck = row['County']
-                                    continue
-                                else:
-                                    padCols = [row['State'], row['County']] + [0] * (len(rd.columns)-2)
-                                    tmpFrame = pd.DataFrame([padCols], columns=rd.columns)
-                                    addedFrames = addedFrames.append(tmpFrame)
-                                    prevCheck = row['County']
-                                    continue
-                                    # BEDFORD, BEDFORD -> need two matches, if not pad
-
-                        prevCheck = row['County']
-                        # NO DIRECT MATCH. Focus on counties in the same state
-                        stateSub = rd[rd['State']==row['State']]
-                        # Compute Levenshtein distance between master county and all counties in state
-                        distances = stateSub['County'].map(lambda x: lev.distance(x, row['County']))
-                        if (distances[distances == 1].shape[0] == 1):
-                            # Single county match w/ lev dist. 1
-                            matches = distances[distances == 1]
-                            ind = matches[-1:].index[0]
-                            print("Target: {:s} | Match {:s}".format(row['County'], rd.get_value(ind, 'County')))
-                            rd = rd.set_value(ind, 'County', row['County'])
-                        elif (distances[distances == 1].shape[0] > 1):
-                            # More than one county match w/ lev. dist 1
-                            matches = distances[distances == 1]
-                            ind = matches[-1:].index[0]
-                            print("Target: {:s} | Match {:s}".format(row['County'], rd.get_value(ind, 'County')))
-                            rd = rd.set_value(ind, 'County', row['County'])
-                        else:
-                            # pad with zeros rows at end of dataframe of missing county
-                            padCols = [row['State'], row['County']] + [0] * (len(rd.columns)-2)
-                            tmpFrame = pd.DataFrame([padCols], columns=rd.columns)
-                            addedFrames = addedFrames.append(tmpFrame)
-
-                    # append pad rows to the dataframe
-                    rd = rd.append(addedFrames)
-                    # Sort by State, then internally by County
-                    rd = rd.sort_values(['State', 'County'], axis=0)
-
-                    # Drop all rows not containg city/state pair in the master set
-                    for idx, row in rd.iterrows():
-                        if (MASTER_COUNTY_SET.get(row['County']) == None):
-                            rd.drop(idx, inplace=True)
-                        else:
-                            if (not (row['State'] in MASTER_COUNTY_SET.get(row['County']))):
-                                rd.drop(idx, inplace=True)
-
                     # Only include columns defined in the configuration file
                     for col in rd.columns:
                         if col not in ds['data_labels']:
                             rd.drop(col, axis=1, inplace=True)
+
+                    rd = padDataframe(rd, masterList)
+
+                    # Marker to indicate if row should be dropped
+                    rd['DROP_ROW'] = np.zeros(rd.shape[0])
+                    # Drop all rows not containg city/state pair in the master set
+                    for idx, row in rd.iterrows():
+                        if (MASTER_COUNTY_SET.get(row['County']) == None):
+                            rd.set_value(idx,'DROP_ROW',1)
+                            # rd.drop(idx, inplace=True)
+                        else:
+                            if (not (row['State'] in MASTER_COUNTY_SET.get(row['County']))):
+                                rd.set_value(idx,'DROP_ROW',1)
+                                # rd.drop(idx, inplace=True)
+
+                    # Only keep rows not slated to be dropped
+                    rd = rd[rd['DROP_ROW'] == 0]
+                    rd.drop('DROP_ROW', axis=1, inplace=True)
+
+
+                    # Only include columns defined in the configuration file
+                    # for col in rd.columns:
+                    #     if col not in ds['data_labels']:
+                    #         rd.drop(col, axis=1, inplace=True)
 
                     # Output the transformed data to file
                     print("{:s} transformed. Outputting to: {:s}".format(ds['name'], outPath))
