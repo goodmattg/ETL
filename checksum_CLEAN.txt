@@ -5,4 +5,4 @@ Finished cleaning dataset: Election_Gubernatorial
 Finished cleaning dataset: Election_House
 Finished cleaning dataset: Population
 Finished cleaning dataset: Race
-Timestamp: 2016-Dec-24 17:39:23
+Timestamp: 2016-Dec-25 10:25:47
