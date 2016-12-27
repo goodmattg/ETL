@@ -1,17 +1,27 @@
-data = zeros(3113, length(1960:10:2010));
+clc; clear all; 
 
-fname = '../ETL/Race/TR/raceRaw.csv';
+dataVectorSize = getCityListSize();
+y_start = 1960; 
+y_end = 2010; 
+y_inc = 10; 
+
+numDatasets = length(y_start:y_inc:y_end); 
+completeRace = zeros(dataVectorSize, numDatasets);
+
+fname = '../Race/TR/rawRace.csv';
 fileID = fopen(fname);
-rawData = textscan(fileID,['%*d', '%s', '%s', repmat('%d',[1,6])], 'Delimiter',',','HeaderLines',1);
+rawData = textscan(fileID,['%*s', '%*s', repmat('%d',[1,numDatasets])], 'Delimiter',',','HeaderLines',1);
 fclose(fileID);
 
-for y = 1:6    
-    data(:,y) = rawData{y+2};
+for i=1:length(rawData)
+    completeRace(:,i) = rawData{i};
 end
 
-percentWhite = struct('y_start',1960,...
+completeRace(isnan(completeRace) | (completeRace == 1)) = 0;
+
+raceData = struct('y_start',1960,...
                   'y_end',2010, ...
                   'y_increment',10, ...
-                  'data',data);
+                  'data',completeRace);
               
-save('../ETL/Race/MAT/percentageWhite.mat', 'percentWhite')
+save('../Race/MAT/raceData.mat', 'raceData')
