@@ -17,7 +17,7 @@ for i=1:length(rawData)
     completeRace(:,i) = rawData{i};
 end
 
-completeRace(isnan(completeRace) | (completeRace == 1)) = 0;
+completeRace(isnan(completeRace)) = 0;
 
 raceData = struct('y_start',1960,...
                   'y_end',2010, ...
