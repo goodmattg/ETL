@@ -1,8 +1,0 @@
-Finished cleaning dataset: Election_Senatorial
-Finished cleaning dataset: Election_Presidential
-Finished cleaning dataset: Median_Income
-Finished cleaning dataset: Election_Gubernatorial
-Finished cleaning dataset: Election_House
-Finished cleaning dataset: Population
-Finished cleaning dataset: Race
-Timestamp: 2016-Dec-25 10:25:47
