@@ -3,7 +3,7 @@ from string import Template
 import Levenshtein as lev
 import pandas as pd
 import numpy as np
-import pdb
+import yaml as yaml
 import datetime
 
 
@@ -68,6 +68,7 @@ def padDataframe(iFrame, masterList):
 def transformMaster(cityMasterList):
 
     config = hp.getConfigData()
+    checksumTransform = hp.getChecksumTransform()
 
     # load path constants defined in config.yaml
     RAW_DIR = config['dirHeaders']['raw_dir']
@@ -140,7 +141,8 @@ def transformMaster(cityMasterList):
                     if (rd[(rd['State']==state) & (rd['County']==county)].shape[0] == 0):
                       f_checksum.write("{:s} | {:s}\n".format(county, state))
 
-                f_checksum.write("{:d} Counties\n\n".format(rd.shape[0]))
+                # f_checksum.write("{:d} Counties\n\n".format(rd.shape[0]))
+                checksumTransform['processedFiles'].append({'filename': ds['directory'], 'numCounties:': rd.shape[0]})
 
 
             # ----------------------------------------------------------------------
@@ -202,18 +204,20 @@ def transformMaster(cityMasterList):
                           f_checksum.write("{:s} | {:s}\n".format(county, state))
 
 
-                    f_checksum.write("Year: {:d} transformed\n".format(year))
-                    f_checksum.write("{:d} Counties\n\n".format(rd.shape[0]))
+                    # f_checksum.write("Year: {:d} transformed\n".format(year))
+                    # f_checksum.write("{:d} Counties\n\n".format(rd.shape[0]))
 
-            f_checksum.write("Finished transforming dataset: {:s}\n\n".format(ds['name']))
-            f_checksum.write("---------------------------------------------------\n")
+
+            checksumTransform['processedFiles'].append({'filename': ds['directory'], 'numCounties:': rd.shape[0]})
+            # f_checksum.write("Finished transforming dataset: {:s}\n\n".format(ds['name']))
+            # f_checksum.write("---------------------------------------------------\n")
 
         except Exception as e:
             print(e)
-            f_checksum.write("ERROR transforming dataset: {:s}\n".format(ds['name']))
+            # f_checksum.write("ERROR transforming dataset: {:s}\n".format(ds['name']))
 
-    f_checksum.write('Timestamp: {:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now()))
-    f_checksum.close()
+    # f_checksum.write('Timestamp: {:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now()))
+    # f_checksum.close()
 
 
 

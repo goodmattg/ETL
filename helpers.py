@@ -19,19 +19,19 @@ Getter/Setter wrapper methods for reading/writing to checksum files
 def getChecksumClean():
     with open("checksumClean.yaml", 'r') as stream:
         try:
-            data = yaml.load(stream)
+            cc = yaml.load(stream)
         except yaml.YAMLError as exc:
             print(exc)
-    return data
+    return cc
 
 
 def getChecksumTransform():
     with open("checksumTransform.yaml", 'r') as stream:
         try:
-            data = yaml.load(stream)
+            ct = yaml.load(stream)
         except yaml.YAMLError as exc:
             print(exc)
-    return data
+    return ct
 
 def setChecksumClean(data):
     with open("checksumClean.yaml", 'w') as stream:
@@ -64,7 +64,7 @@ def getConfigData():
 Getter method to return previous run datafile
 '''
 
-def readPreviousRunData(newData):
+def readPreviousRunData():
     with open("previousRun.yaml", 'r+') as stream:
         try:
             data = yaml.load(stream)
