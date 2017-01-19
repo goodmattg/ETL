@@ -11,17 +11,31 @@ def etlData(directives):
 
     if ('redo_clean' in directives):
         os.system('rm -rf **/CLEAN/*.csv')
-        os.system('rm checksum_CLEAN.yaml')
+        # reset the data structure for the CLEAN checksum
+        with open("checksumClean.yaml", 'r+') as stream:
+            try:
+                data = yaml.load(stream)
+                data['processedFiles'] = []
+                yaml.dump(data, stream)
+            except yaml.YAMLError as exc:
+                print(exc)
+        # Run the clean master script
         cleanMaster()
+
     if ('redo_transform' in directives):
         os.system('rm -rf **/TR/*.csv')
+        # reset the data structure for the CLEAN checksum
+        with open("checksumTransform.yaml", 'r+') as stream:
+            try:
+                data = yaml.load(stream)
+                data['processedFiles'] = []
+                yaml.dump(data, stream)
+            except yaml.YAMLError as exc:
+                print(exc)
+        # reset the data structure for the TRANFSORM checksum
         os.system('rm checksum_TRANSFORM.yaml')
+        # run the transform master script
         transformMaster()
-
-    # force clean and transform to only operate on listed configuration entries?
-
-
-
 
 
 if __name__ == '__main__':

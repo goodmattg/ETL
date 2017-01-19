@@ -13,24 +13,43 @@ def getDictionarySet(masterList):
 
 
 '''
-Returns the parsed config file "config.yaml" as a dictionary
+Getter/Setter wrapper methods for reading/writing to checksum files
 '''
 
 def getChecksumClean():
-    with open("checksumClean.yaml", 'r+') as stream:
+    with open("checksumClean.yaml", 'r') as stream:
         try:
             data = yaml.load(stream)
         except yaml.YAMLError as exc:
             print(exc)
     return data
 
+
 def getChecksumTransform():
-    with open("checksumTransform.yaml", 'r+') as stream:
+    with open("checksumTransform.yaml", 'r') as stream:
         try:
             data = yaml.load(stream)
         except yaml.YAMLError as exc:
             print(exc)
     return data
+
+def setChecksumClean(data):
+    with open("checksumClean.yaml", 'w') as stream:
+        try:
+            yaml.dump(data, stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+
+def setChecksumTransform(data):
+    with open("checksumTransform.yaml", 'w') as stream:
+        try:
+            yaml.dump(data, stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+
+'''
+Getter method to return dataset specification datafile
+'''
 
 def getConfigData():
     with open("config.yaml", 'r') as stream:
@@ -39,6 +58,11 @@ def getConfigData():
         except yaml.YAMLError as exc:
             print(exc)
     return data
+
+
+'''
+Getter method to return previous run datafile
+'''
 
 def readPreviousRunData(newData):
     with open("previousRun.yaml", 'r+') as stream:

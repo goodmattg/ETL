@@ -3,6 +3,7 @@ from string import Template
 import pandas as pd
 import numpy as np
 import datetime
+import yaml as yaml
 
 '''
 Master file to generate "clean" data from datasets defined in
@@ -18,6 +19,7 @@ column is poorly defined. Again, the "County" column will be well defined.
 def cleanMaster():
 
     config = hp.getConfigData()
+    checksumClean = hp.getChecksumClean()
 
     # load path constants defined in config.yaml
     RAW_DIR = config['dirHeaders']['raw_dir']
@@ -32,7 +34,7 @@ def cleanMaster():
     # load the state abbreviation map
     abbrevMap = hp.getAbbreviationMap()
 
-    f_checksum = open('checksum_CLEAN.txt', 'w')
+    # f_checksum = open('checksum_CLEAN.txt', 'w')
 
     for s in config['datasets']:
         try:
@@ -120,6 +122,8 @@ def cleanMaster():
                 print("{:s} cleaned. Outputting to: {:s}".format(ds['name'], outPath))
                 rawData.to_csv(outPath,index=False)
 
+                # Write to checksum file
+                checksumClean['processedFiles'].append({'filename': ds['directory'], 'numCounties:': len(rawData.index)})
 
             else:
                 # Handle multiple files
@@ -210,12 +214,16 @@ def cleanMaster():
                     print("{:s} cleaned. Outputting to: {:s}".format(ds['name'], outPath))
                     rawData.to_csv(outPath,index=False)
 
-            f_checksum.write("Finished cleaning dataset: {:s}\n".format(ds['name']))
+                            # Write to checksum file
+            checksumClean['processedFiles'].append({'filename': ds['directory'], 'numCounties:': len(rawData.index)})
+            # f_checksum.write("Finished cleaning dataset: {:s}\n".format(ds['name']))
 
         except Exception as e:
             print(e)
-            f_checksum.write("ERROR cleaning dataset: {:s}\n".format(ds['name']))
+            # f_checksum.write("ERROR cleaning dataset: {:s}\n".format(ds['name']))
+            print("ERROR cleaning dataset: {:s}\n".format(ds['name']))
 
-    f_checksum.write('Timestamp: {:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now()))
-    f_checksum.close()
-
+    # f_checksum.write('Timestamp: {:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now()))
+    # f_checksum.close()
+    # Update the clean checksum file
+    setChecksumClean(checksumClean)
