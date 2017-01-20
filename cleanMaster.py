@@ -123,8 +123,8 @@ def cleanMaster():
                 rawData.to_csv(outPath,index=False)
 
                 # Write to checksum file
-                checksumClean['processedFiles'].append({'filename': ds['directory'], 'numCounties:': rawData.shape[0]})
-                print(checksumClean)
+                checksumClean['processedFiles'].append({'filename': absPath, 'numCounties:': rawData.shape[0]})
+
 
             else:
                 # Handle multiple files
@@ -214,12 +214,8 @@ def cleanMaster():
                     rawData = rawData.sort_values(['State', 'County'], axis=0)
                     print("{:s} cleaned. Outputting to: {:s}".format(ds['name'], outPath))
                     rawData.to_csv(outPath,index=False)
-
-                            # Write to checksum file
-            checksumClean['processedFiles'].append({'filename': ds['directory'], 'numCounties:': rawData.shape[0]})
-            print(checksumClean)
-
-            # f_checksum.write("Finished cleaning dataset: {:s}\n".format(ds['name']))
+                    # Write to checksum file
+                    checksumClean['processedFiles'].append({'filename': absPath, 'numCounties:': rawData.shape[0]})
 
         except Exception as e:
             print(e)
@@ -229,4 +225,4 @@ def cleanMaster():
     # f_checksum.write('Timestamp: {:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now()))
     # f_checksum.close()
     # Update the clean checksum file
-    setChecksumClean(checksumClean)
+    hp.setChecksumClean(checksumClean)

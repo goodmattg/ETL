@@ -120,11 +120,11 @@ def transformMaster(cityMasterList):
                 # Drop all rows not containg city/state pair in the master set
                 for idx, row in rd.iterrows():
                     if (MASTER_COUNTY_SET.get(row['County']) == None):
-                        print(row['County'])
+                        # print(row['County'])
                         rd.set_value(idx,'DROP_ROW',1)
                     else:
                         if (not (row['State'] in MASTER_COUNTY_SET.get(row['County']))):
-                            print(row['County'])
+                            # print(row['County'])
                             rd.set_value(idx,'DROP_ROW',1)
 
                 # Only keep rows not slated to be dropped
@@ -142,13 +142,9 @@ def transformMaster(cityMasterList):
                       f_checksum.write("{:s} | {:s}\n".format(county, state))
 
                 # f_checksum.write("{:d} Counties\n\n".format(rd.shape[0]))
-                checksumTransform['processedFiles'].append({'filename': ds['directory'], 'numCounties:': rd.shape[0]})
+                checksumTransform['processedFiles'].append({'filename': absPath, 'numCounties:': rd.shape[0]})
 
-
-            # ----------------------------------------------------------------------
-
-
-            else: # HANDLE MULTIPLE FILES
+            else:
                 print("Multiple files\n")
                 for year in hp.yearList(ds['year_start'],
                            ds['year_end'],
@@ -203,12 +199,7 @@ def transformMaster(cityMasterList):
                         if (rd[(rd['State']==state) & (rd['County']==county)].shape[0] == 0):
                           f_checksum.write("{:s} | {:s}\n".format(county, state))
 
-
-                    # f_checksum.write("Year: {:d} transformed\n".format(year))
-                    # f_checksum.write("{:d} Counties\n\n".format(rd.shape[0]))
-
-
-            checksumTransform['processedFiles'].append({'filename': ds['directory'], 'numCounties:': rd.shape[0]})
+                    checksumTransform['processedFiles'].append({'filename': absPath, 'numCounties:': rd.shape[0]})
             # f_checksum.write("Finished transforming dataset: {:s}\n\n".format(ds['name']))
             # f_checksum.write("---------------------------------------------------\n")
 
@@ -218,7 +209,7 @@ def transformMaster(cityMasterList):
 
     # f_checksum.write('Timestamp: {:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now()))
     # f_checksum.close()
-
+    hp.setChecksumTransform(checksumTransform)
 
 
 if __name__ == '__main__':

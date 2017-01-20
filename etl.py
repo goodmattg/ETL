@@ -10,7 +10,7 @@ def etlData(directives):
 
     previousRun = hp.readPreviousRunData()
 
-    if ('redo_clean' in directives):
+    if ('redo_clean' in directives['op_flags']):
         os.system('rm -rf **/CLEAN/*.csv')
         # reset the data structure for the CLEAN checksum
         with open("checksumClean.yaml", 'r+') as stream:
@@ -23,7 +23,7 @@ def etlData(directives):
         # Run the clean master script
         cleanMaster()
 
-    if ('redo_transform' in directives):
+    if ('redo_transform' in directives['op_flags']):
         os.system('rm -rf **/TR/*.csv')
         # reset the data structure for the CLEAN checksum
         with open("checksumTransform.yaml", 'r+') as stream:
@@ -36,13 +36,25 @@ def etlData(directives):
         # reset the data structure for the TRANFSORM checksum
         os.system('rm checksum_TRANSFORM.yaml')
         # run the transform master script
-        transformMaster()
+        transformMaster(directives['master_dir'])
 
 
 if __name__ == '__main__':
+    directives = {}
+    # Handle clean/transform command line args
     if '-fc' in sys.argv:
-        etlData(['redo_clean', 'redo_transform'])
+        directives['op_flags'] = ['redo_clean', 'redo_transform']
     elif '-ftx' in sys.argv:
-        etlData(['redo_transform'])
+        directives['op_flags'] = ['redo_transform']
+    # Handle pointer to master list of counties
+    if '-list' in sys.argv:
+        directives['master_dir'] = sys.argv[sys.argv.index('-list')+1]
     else:
-        etlData([])
+        directives['master_dir'] = 'CountyLists/masterList.csv'
+
+    # print('[%s]' % ', '.join(map(str, directives['op_flags'])))
+    # print('MASTERLIST: ' + directives['master_list'])
+
+    # Run the ETL script with directives
+    etlData(directives)
+
