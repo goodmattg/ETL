@@ -53,6 +53,10 @@ def cleanMaster():
                                               fname=ds['file_base'],
                                               ftype=DATA_FTYPE)
 
+                # BREAK EARLY IF FILE ALREADY PROCESSED
+                if (not hp.goAheadForClean(absPath)):
+                    continue
+
                 print("Loading: {:s}".format(absPath))
                 rawData = pd.read_csv(absPath)
 
@@ -123,7 +127,7 @@ def cleanMaster():
                 rawData.to_csv(outPath,index=False)
 
                 # Write to checksum file
-                checksumClean['processedFiles'].append({'filename': absPath, 'numCounties:': rawData.shape[0]})
+                checksumClean['processedFiles'][absPath] = rawData.shape[0]
 
 
             else:
@@ -144,6 +148,10 @@ def cleanMaster():
                                           fname=ds['file_base'],
                                           year=year,
                                           ftype=DATA_FTYPE)
+
+                    # BREAK EARLY IF FILE ALREADY PROCESSED
+                    if (not hp.goAheadForClean(absPath)):
+                        continue
 
                     print("Loading: {:s}".format(absPath))
                     rawData = pd.read_csv(absPath)
@@ -215,7 +223,7 @@ def cleanMaster():
                     print("{:s} cleaned. Outputting to: {:s}".format(ds['name'], outPath))
                     rawData.to_csv(outPath,index=False)
                     # Write to checksum file
-                    checksumClean['processedFiles'].append({'filename': absPath, 'numCounties:': rawData.shape[0]})
+                    checksumClean['processedFiles'][absPath] = rawData.shape[0]
 
         except Exception as e:
             print(e)

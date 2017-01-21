@@ -1,5 +1,1 @@
----
-masterCountyListFile: 'none'
-numCountiesInMaster: -1
-filesProcessed: []
-...
+{masterCountyListFile: CountyLists/masterList.csv, numCountiesInMaster: 3115}

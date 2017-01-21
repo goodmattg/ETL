@@ -8,20 +8,16 @@ import sys
 
 def etlData(directives):
 
-    previousRun = hp.readPreviousRunData()
-
     if ('redo_clean' in directives['op_flags']):
         os.system('rm -rf **/CLEAN/*.csv')
         # reset the data structure for the CLEAN checksum
         with open("checksumClean.yaml", 'r+') as stream:
             try:
                 data = yaml.load(stream)
-                data['processedFiles'] = []
+                data['processedFiles'] = {}
                 yaml.dump(data, stream)
             except yaml.YAMLError as exc:
                 print(exc)
-        # Run the clean master script
-        cleanMaster()
 
     if ('redo_transform' in directives['op_flags']):
         os.system('rm -rf **/TR/*.csv')
@@ -29,18 +25,17 @@ def etlData(directives):
         with open("checksumTransform.yaml", 'r+') as stream:
             try:
                 data = yaml.load(stream)
-                data['processedFiles'] = []
+                data['processedFiles'] = {}
                 yaml.dump(data, stream)
             except yaml.YAMLError as exc:
                 print(exc)
-        # reset the data structure for the TRANFSORM checksum
-        os.system('rm checksum_TRANSFORM.yaml')
-        # run the transform master script
-        transformMaster(directives['master_dir'])
 
+    # run clean and transform master scripts
+    cleanMaster()
+    transformMaster(directives['master_dir'])
 
 if __name__ == '__main__':
-    directives = {}
+    directives = {'op_flags': []}
     # Handle clean/transform command line args
     if '-fc' in sys.argv:
         directives['op_flags'] = ['redo_clean', 'redo_transform']

@@ -65,6 +65,10 @@ def padDataframe(iFrame, masterList):
 
 
 
+'''
+Transforms a list given a master list given STATE,COUNTY to compare against
+'''
+
 def transformMaster(cityMasterList):
 
     config = hp.getConfigData()
@@ -101,6 +105,12 @@ def transformMaster(cityMasterList):
                 outPath = sf_template.substitute(base=ds['directory'], type=TR_DIR, fname=ds['file_base'], ftype=DATA_FTYPE)
                 yRange = range(ds['year_start'], ds['year_end'] + ds['year_increment'], ds['year_increment'])
                 yRangeStr = [str(y) for y in yRange]
+
+
+                # BREAK EARLY IF FILE ALREADY PROCESSED
+                if (not hp.goAheadForTransform(absPath, cityMasterList)):
+                    continue
+
 
                 print("Loading: {:s}".format(absPath))
                 rd = pd.read_csv(absPath)
@@ -142,7 +152,7 @@ def transformMaster(cityMasterList):
                       f_checksum.write("{:s} | {:s}\n".format(county, state))
 
                 # f_checksum.write("{:d} Counties\n\n".format(rd.shape[0]))
-                checksumTransform['processedFiles'].append({'filename': absPath, 'numCounties:': rd.shape[0]})
+                checksumTransform['processedFiles'][absPath] = rd.shape[0]
 
             else:
                 print("Multiple files\n")
@@ -162,6 +172,11 @@ def transformMaster(cityMasterList):
                                           fname=ds['file_base'],
                                           year=year,
                                           ftype=DATA_FTYPE)
+
+
+                    # BREAK EARLY IF FILE ALREADY PROCESSED
+                    if (not hp.goAheadForTransform(absPath, cityMasterList)):
+                        continue
 
                     print("Loading: {:s}".format(absPath))
                     rd = pd.read_csv(absPath)
@@ -199,7 +214,7 @@ def transformMaster(cityMasterList):
                         if (rd[(rd['State']==state) & (rd['County']==county)].shape[0] == 0):
                           f_checksum.write("{:s} | {:s}\n".format(county, state))
 
-                    checksumTransform['processedFiles'].append({'filename': absPath, 'numCounties:': rd.shape[0]})
+                    checksumTransform['processedFiles'][absPath] = rd.shape[0]
             # f_checksum.write("Finished transforming dataset: {:s}\n\n".format(ds['name']))
             # f_checksum.write("---------------------------------------------------\n")
 
@@ -210,7 +225,11 @@ def transformMaster(cityMasterList):
     # f_checksum.write('Timestamp: {:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now()))
     # f_checksum.close()
     hp.setChecksumTransform(checksumTransform)
-
+    # Update the "previousRun.yaml" file
+    prevRun = hp.getPreviousRunData()
+    prevRun['masterCountyListFile'] = cityMasterList
+    prevRun['numCountiesInMaster'] = masterList.shape[0]
+    hp.setPreviousRunData(prevRun)
 
 if __name__ == '__main__':
     import sys
